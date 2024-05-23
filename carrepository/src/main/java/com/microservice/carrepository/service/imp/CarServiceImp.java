@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,9 +21,14 @@ public class CarServiceImp implements CarService {
     private final CarMapper carMapper;
     @Override
     public CarDtoSend saveCar(CarDtoSave carDtoSave) {
-        Car car = carMapper.carDtoSaveToCar(carDtoSave);
-        car.setAvaliable(true);
-        return carMapper.carToCarDtoSend(carRepository.save(car));
+        Optional<Car> car = carRepository.findByModel(carDtoSave.getModel());
+        if (car.isPresent()){
+            throw new RuntimeException("Car already exists");
+        }
+        car = Optional.of(carMapper.carDtoSaveToCar(carDtoSave));
+        car.get().setAvaliable(true);
+
+        return carMapper.carToCarDtoSend(carRepository.save(car.get()));
     }
 
     @Override

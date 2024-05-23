@@ -14,16 +14,21 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("microservice/carrepository")
+@RequestMapping("microservice/1.0.0./carrepository")
 @AllArgsConstructor
 @Validated
 public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<CarDtoSend> saveCar(@RequestBody @Valid CarDtoSave carDtoSave){
-        return ResponseEntity.created(URI.create("microservice/carrepository"))
-                .body(carService.saveCar(carDtoSave));
+    public ResponseEntity<?> saveCar(@RequestBody @Valid CarDtoSave carDtoSave){
+        try {
+            return ResponseEntity.created(URI.create("microservice/1.0.0./carrepository"))
+                    .body(carService.saveCar(carDtoSave));
+        } catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @GetMapping

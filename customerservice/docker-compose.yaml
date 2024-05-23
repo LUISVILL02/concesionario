@@ -30,3 +30,4 @@ services:
       - red
 networks:
   red:
+    name: 'red'

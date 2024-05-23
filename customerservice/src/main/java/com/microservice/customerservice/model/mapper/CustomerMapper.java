@@ -5,6 +5,7 @@ import com.microservice.customerservice.model.dtos.send.CustomerDtoSend;
 import com.microservice.customerservice.model.dtos.save.CustomerDtoSave;
 import com.microservice.customerservice.model.entities.Customer;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {

@@ -1,13 +1,30 @@
+
 spring:
   application:
-    name: 'bookingservice'
+    name: boookingservice
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
 
 server:
-  port: 0
+  port: 8080
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
   instance:
     instanceId: ${spring.application.name}:${random.value}
+

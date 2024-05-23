@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: 'bookingservice'
+
+server:
+  port: 0
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+  instance:
+    instanceId: ${spring.application.name}:${random.value}

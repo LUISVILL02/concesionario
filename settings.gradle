@@ -1,0 +1,6 @@
+rootProject.name = 'consencionario'
+
+include 'bookingservice'
+include 'carrepository'
+include 'customerservice'
+include 'eurekasserver'

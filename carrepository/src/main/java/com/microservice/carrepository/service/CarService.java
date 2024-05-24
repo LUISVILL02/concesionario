@@ -11,5 +11,5 @@ public interface CarService {
     List<CarDtoSend> getAvaliableCars();
 
     CarDtoSend reserveCar(UUID idCar);
-    CarDtoSend returnCar(UUID idCar);
+    CarDtoSend returnCar(UUID idCar, UUID idBooking);
 }

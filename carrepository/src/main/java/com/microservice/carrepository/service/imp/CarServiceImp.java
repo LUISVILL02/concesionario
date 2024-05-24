@@ -7,7 +7,9 @@ import com.microservice.carrepository.model.mapper.CarMapper;
 import com.microservice.carrepository.repository.CarRepository;
 import com.microservice.carrepository.service.CarService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class CarServiceImp implements CarService {
 
     private final CarRepository carRepository;
     private final CarMapper carMapper;
+    private RestTemplate restTemplate;
     @Override
     public CarDtoSend saveCar(CarDtoSave carDtoSave) {
         Optional<Car> car = carRepository.findByModel(carDtoSave.getModel());
@@ -49,11 +52,17 @@ public class CarServiceImp implements CarService {
     }
 
     @Override
-    public CarDtoSend returnCar(UUID idCar) {
+    public CarDtoSend returnCar(UUID idCar, UUID idBooking){
+        String url = "http://container3-app:8080/microservice/1.0.0./booking/cancelar/"+ idBooking;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+
         Car car = carRepository.findById(idCar)
                 .orElseThrow(() -> new RuntimeException("Car not found"));
         if (!car.getAvaliable()){
             car.setAvaliable(true);
+            restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
             return carMapper.carToCarDtoSend(carRepository.save(car));
         }
         throw new RuntimeException("Car already avaliable");

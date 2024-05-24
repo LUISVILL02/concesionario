@@ -37,20 +37,20 @@ public class CarController {
     }
 
     @PutMapping("/{idCar}")
-    public ResponseEntity<CarDtoSend> reserveCar(@PathVariable UUID idCar){
+    public ResponseEntity<?> reserveCar(@PathVariable UUID idCar){
         try {
             return ResponseEntity.ok(carService.reserveCar(idCar));
         } catch (RuntimeException e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PatchMapping("/{idCar}")
-    public ResponseEntity<CarDtoSend> returnCar(@PathVariable UUID idCar){
+    @PatchMapping("/{idCar}/{idBooking}")
+    public ResponseEntity<?> returnCar(@PathVariable UUID idCar, @PathVariable UUID idBooking){
         try {
-            return ResponseEntity.ok(carService.returnCar(idCar));
+            return ResponseEntity.ok(carService.returnCar(idCar, idBooking));
         } catch (RuntimeException e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

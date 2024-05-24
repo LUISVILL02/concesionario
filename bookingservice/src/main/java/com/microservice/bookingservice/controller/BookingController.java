@@ -32,7 +32,7 @@ public class BookingController {
         }
     }
 
-    @PatchMapping("/cancelar/{id}")
+    @PutMapping("/cancelar/{id}")
     public ResponseEntity<?> cancel(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(bookingService.cancelar(id));
@@ -41,7 +41,7 @@ public class BookingController {
         }
     }
 
-    @PatchMapping("/completar/{id}")
+    @PutMapping("/completar/{id}")
     public ResponseEntity<?> complete(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(bookingService.completar(id));
@@ -50,7 +50,7 @@ public class BookingController {
         }
     }
 
-    @PatchMapping("/fail/{id}")
+    @PutMapping("/fail/{id}")
     public ResponseEntity<?> fail(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(bookingService.fail(id));

@@ -70,6 +70,8 @@ public class BookingServiceImp implements BookingService {
     public String cancelar(UUID id) {
         Booking booking = verifier(id);
         booking.setStatus(BookingStatus.CANCELLED);
+        //crear otro metodo para solo cambiar la fecha de fin
+        booking.setEndDate(LocalDate.now());
         return messaje(booking);
     }
 

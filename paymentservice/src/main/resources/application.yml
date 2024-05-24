@@ -25,4 +25,5 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
   instance:
-    instanceId: ${spring.application.name}:${random.value}
+    hostname: localhost
+    nonSecurePort: 8003

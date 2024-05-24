@@ -1,0 +1,37 @@
+server:
+  port: 8060
+
+spring:
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: carrepository
+            uri: lb://carrepository
+            predicates:
+              - Path=/microservice/1.0.0./carrepository/**
+          - id: customerservice
+            uri: lb://customerservice
+            predicates:
+              - Path=/microservice/1.0.0./customers/**
+          - id: bookingservice
+            uri: lb://boookingservice
+            predicates:
+              - Path=/microservice/1.0.0./booking/**
+          - id: paymentservice
+            uri: lb://paymentservice
+            predicates:
+              - Path=/microservices/1.0.0./payment/**
+logging:
+  level:
+    root: info
+    org.springframework.cloud.gateway: trace
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+  instance:
+    instanceId: ${spring.application.name}:${random.value}

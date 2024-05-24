@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: carrepositoy
+    name: carrepository
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
@@ -26,5 +26,6 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
   instance:
-    instanceId: ${spring.application.name}:${random.value}
+    hostname: localhost
+    nonSecurePort: 8000
 

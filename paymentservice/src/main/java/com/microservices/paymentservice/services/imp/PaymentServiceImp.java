@@ -49,14 +49,15 @@ public class PaymentServiceImp implements PaymentService {
                 payment.setStatus(PaymentEstatus.COMPLETED);
                 payment.setTransactionId(UUID.randomUUID());
 
-                ResponseEntity<BookingRequest> carDtoResponseEntity = restTemplate.exchange(
-                        urlBookingCompletar, HttpMethod.PATCH, requestEntity, BookingRequest.class);
+                restTemplate.exchange(urlBookingCompletar, HttpMethod.PUT, requestEntity, String.class);
                 return paymentMapper.toDtoSend(paymentRepository.save(payment));
             }
             payment.setStatus(PaymentEstatus.FAILED);
+            paymentMapper.toDtoSend(paymentRepository.save(payment));
 
-            ResponseEntity<BookingRequest> carDtoResponseEntity = restTemplate.exchange(
-                    urlBookingFail, HttpMethod.PATCH, requestEntity, BookingRequest.class);
+            if (!isNull(bookingRequest) && !bookingRequest.getStatus().equals("COMPLETE")) {
+                restTemplate.exchange(urlBookingFail, HttpMethod.PUT, requestEntity, String.class);
+            }
             throw new RuntimeException("Failed to confirm booking");
         } catch (HttpClientErrorException ex) {
             throw new RuntimeException("Error de cliente al llamar al servicio de reserva: " + ex.getMessage(), ex);
@@ -69,6 +70,6 @@ public class PaymentServiceImp implements PaymentService {
 
     @Override
     public Optional<PaymentDtoSend> findById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(paymentRepository.findById(id).map(paymentMapper::toDtoSend).orElseThrow(RuntimeException::new));
     }
 }

@@ -30,8 +30,8 @@ public class BookingServiceImp implements BookingService {
     @Override
     public BookingDtoSend save(BookingDtoSave bookingDtoSave) {
         try {
-            String urlCustomer = "http://container2-app:8080/microservice/1.0.0./customers/" + bookingDtoSave.getIdCustomer();
-            String urlCar = "http://container1-app:8080/microservice/1.0.0./carrepository/" + bookingDtoSave.getIdCar();
+            String urlCustomer = "http://host.docker.internal:8181/microservice/1.0.0./customers/" + bookingDtoSave.getIdCustomer();
+            String urlCar = "http://host.docker.internal:8181/microservice/1.0.0./carrepository/" + bookingDtoSave.getIdCar();
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

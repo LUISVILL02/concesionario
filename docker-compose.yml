@@ -1,0 +1,165 @@
+version: '3'
+services:
+  eurekasserver:
+    container_name: eurekasserver
+    build:
+      context: ./eurekasserver
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8070"
+    expose:
+      - "8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - red
+  apigateway:
+    container_name: apigateway
+    build:
+      context: ./apigateway
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8060"
+    expose:
+      - "8181"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+    depends_on:
+      - eurekasserver
+    networks:
+      - red
+  db-paymentservice:
+    image: 'postgres:latest'
+    container_name: 'db-paymentservice'
+    environment:
+      - 'POSTGRES_DB=db-book-service'
+      - 'POSTGRES_PASSWORD=booking'
+      - 'POSTGRES_USER=booking'
+    ports:
+      - '5402:5432'
+    networks:
+      - red
+  paymentservice:
+    container_name: 'paymentservice'
+    build:
+      context: ./paymentservice
+      dockerfile: Dockerfile
+    depends_on:
+      - db-paymentservice
+      - eurekasserver
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db-paymentservice:5432/db-book-service
+      - DATABASE_USERNAME=booking
+      - DATABASE_PASSWORD=booking
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+    networks:
+      - red
+  db-customerservice:
+    image: 'postgres:latest'
+    container_name: 'db-customerservice'
+    environment:
+      - 'POSTGRES_DB=db-customer'
+      - 'POSTGRES_PASSWORD=customer'
+      - 'POSTGRES_USER=customer'
+    ports:
+      - '5401:5432'
+    networks:
+      - red
+  customerservice:
+    container_name: 'customerservice'
+    build:
+      context: ./customerservice
+      dockerfile: Dockerfile
+    depends_on:
+      - db-customerservice
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db-customerservice:5432/db-customer
+      - DATABASE_USERNAME=customer
+      - DATABASE_PASSWORD=customer
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+    networks:
+      - red
+  db-bookingservice:
+    image: 'postgres:latest'
+    container_name: 'db-bookingservice'
+    environment:
+      - 'POSTGRES_DB=db-book-service'
+      - 'POSTGRES_PASSWORD=booking'
+      - 'POSTGRES_USER=booking'
+    ports:
+      - '5403:5432'
+    networks:
+      - red
+  bookingservice:
+    container_name: 'bookingservice'
+    build:
+      context: ./bookingservice
+      dockerfile: Dockerfile
+    depends_on:
+      - db-bookingservice
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db-bookingservice:5432/db-book-service
+      - DATABASE_USERNAME=booking
+      - DATABASE_PASSWORD=booking
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+    networks:
+      - red
+  db-carrepository:
+    image: 'postgres:latest'
+    container_name: 'db-carrepository'
+    environment:
+      - 'POSTGRES_DB=db-payment'
+      - 'POSTGRES_PASSWORD=payment'
+      - 'POSTGRES_USER=payment'
+    ports:
+      - '5404:5432'
+    networks:
+      - red
+  carrepository:
+    container_name: 'carrepository'
+    build:
+      context: ./carrepository
+      dockerfile: Dockerfile
+    depends_on:
+      - db-carrepository
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db-carrepository:5432/db-payment
+      - DATABASE_USERNAME=payment
+      - DATABASE_PASSWORD=payment
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+    networks:
+      - red
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - carrepository
+      - bookingservice
+      - customerservice
+      - paymentservice
+    networks:
+      - red
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - red
+networks:
+  red:
+    name: 'red'

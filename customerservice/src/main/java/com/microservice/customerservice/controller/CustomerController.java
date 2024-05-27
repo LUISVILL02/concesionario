@@ -35,4 +35,9 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/help/live")
+    public ResponseEntity<?> findById() {
+        return ResponseEntity.ok("OK");
+    }
 }

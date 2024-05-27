@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,10 +29,10 @@ public class PaymentServiceImp implements PaymentService {
     private  final RestTemplate restTemplate;
     @Override
     public PaymentDtoSend save(PaymentDtoSave paymentDtoSave) {
-        String urlBase = "http://container3-app:8080/microservice/1.0.0./booking";
-        String urlBooking = urlBase + "/" + paymentDtoSave.getIdBooking();
-        String urlBookingCompletar = urlBase +"/completar/" + paymentDtoSave.getIdBooking();
-        String urlBookingFail = urlBase +"/fail/" + paymentDtoSave.getIdBooking();
+        String bookingServiceUrl = "http://host.docker.internal:8181/microservice/1.0.0./booking";
+        String urlBooking = bookingServiceUrl + "/" + paymentDtoSave.getIdBooking();
+        String urlBookingCompletar = bookingServiceUrl +"/completar/" + paymentDtoSave.getIdBooking();
+        String urlBookingFail = bookingServiceUrl +"/fail/" + paymentDtoSave.getIdBooking();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

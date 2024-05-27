@@ -8,22 +8,48 @@ spring:
     gateway:
       mvc:
         routes:
+          - id: carrepository-metrics
+            uri: lb://carrepository
+            predicates:
+              - Path=/microservice/1.0.0./carrepository/actuator/prometheus
+            filters:
+              - RewritePath=/microservice/1.0.0./carrepository/actuator/prometheus, /actuator/prometheus
           - id: carrepository
             uri: lb://carrepository
             predicates:
               - Path=/microservice/1.0.0./carrepository/**
+          - id: customerservice-metrics
+            uri: lb://customerservice
+            predicates:
+              - Path=/microservice/1.0.0./customers/actuator/prometheus
+            filters:
+              - RewritePath=/microservice/1.0.0./customers/actuator/prometheus, /actuator/prometheus
           - id: customerservice
             uri: lb://customerservice
             predicates:
               - Path=/microservice/1.0.0./customers/**
+          - id: bookingservice-metrics
+            uri: lb://boookingservice
+            predicates:
+              - Path=/microservice/1.0.0./booking/actuator/prometheus
+            filters:
+              - RewritePath=/microservice/1.0.0./booking/actuator/prometheus, /actuator/prometheus
           - id: bookingservice
             uri: lb://boookingservice
             predicates:
               - Path=/microservice/1.0.0./booking/**
+          - id: paymentservice-metrics
+            uri: lb://paymentservice
+            predicates:
+              - Path=/microservices/1.0.0./payment/actuator/prometheus
+            filters:
+              - RewritePath=/microservices/1.0.0./payment/actuator/prometheus, /actuator/prometheus
           - id: paymentservice
             uri: lb://paymentservice
             predicates:
               - Path=/microservices/1.0.0./payment/**
+
+
 logging:
   level:
     root: info
@@ -32,6 +58,11 @@ logging:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
   instance:
-    instanceId: ${spring.application.name}:${random.value}
+    preferIpAddress: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

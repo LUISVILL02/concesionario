@@ -18,12 +18,16 @@ spring:
     show-sql: true
 
 server:
-  port: 8080
+  port: 0
 
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
   instance:
-    hostname: localhost
-    nonSecurePort: 8001
+    instanceId: ${spring.application.name}:${random.value}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

@@ -53,7 +53,7 @@ public class CarServiceImp implements CarService {
 
     @Override
     public CarDtoSend returnCar(UUID idCar, UUID idBooking){
-        String url = "http://container3-app:8080/microservice/1.0.0./booking/cancelar/"+ idBooking;
+        String url = "http://host.docker.internal:8181/microservice/1.0.0./booking/cancelar/"+ idBooking;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);

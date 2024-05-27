@@ -1,0 +1,35 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'carrepository'
+    metrics_path: '/microservice/1.0.0./carrepository/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8181' ]
+        labels:
+          application: 'carrepository Service Application'
+  - job_name: 'customerservice'
+    metrics_path: '/microservice/1.0.0./customers/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8181' ]
+        labels:
+          application: 'customerservice Service Application'
+  - job_name: 'bookingservice'
+    metrics_path: '/microservice/1.0.0./booking/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8181' ]
+        labels:
+          application: 'bookingservice Service Application'
+  - job_name: 'payment_service'
+    metrics_path: '/microservices/1.0.0./payment/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8181']
+        labels:
+          application: 'Payment Service Application'
+  - job_name: 'ApiGatewayService'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8181' ]
+        labels:
+          application: 'ApiGateway Service Application'

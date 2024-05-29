@@ -32,3 +32,8 @@ management:
     web:
       exposure:
         include: prometheus
+
+okta:
+  oauth2:
+    issuer: https://dev-5ga4j08xhdasu7gq.us.auth0.com
+    audience: https://dev-5ga4j08xhdasu7gq.us.auth0.com/api/v2/

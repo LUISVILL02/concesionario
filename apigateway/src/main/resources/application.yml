@@ -6,6 +6,8 @@ spring:
     name: apigateway
   cloud:
     gateway:
+      default-filters:
+        - TokenRelay
       mvc:
         routes:
           - id: carrepository-metrics
@@ -48,6 +50,12 @@ spring:
             uri: lb://paymentservice
             predicates:
               - Path=/microservices/1.0.0./payment/**
+okta:
+  oauth2:
+    issuer: https://dev-5ga4j08xhdasu7gq.us.auth0.com/
+    client-id: 3GzxBviz5U92qV12Ftszh4Heju39W3yb
+    client-secret: Em_ND87BRg299Wzk_H00-Xf6uBqQLfYdBay8_xRwte_4s-V8dvKiUrlhIHVKZ0uF
+    audience: https://dev-5ga4j08xhdasu7gq.us.auth0.com/api/v2/
 
 
 logging:

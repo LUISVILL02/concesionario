@@ -42,7 +42,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct:1.5.5.Final"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    //implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+    implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
 }
 
 dependencyManagement {

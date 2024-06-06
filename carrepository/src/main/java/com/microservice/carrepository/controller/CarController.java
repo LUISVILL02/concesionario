@@ -6,6 +6,8 @@ import com.microservice.carrepository.service.CarService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +57,10 @@ public class CarController {
     }
 
     @GetMapping("/help/live")
-    public ResponseEntity<?> findById() {
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<?> findById(Authentication authentication) {
+        DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+        String accessToken = oidcUser.getIdToken().getTokenValue();
+        System.out.println("Access Token: " + accessToken);
+        return ResponseEntity.ok(accessToken);
     }
 }

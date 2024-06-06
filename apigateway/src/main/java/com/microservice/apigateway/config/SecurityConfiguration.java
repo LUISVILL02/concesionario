@@ -23,12 +23,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("api/**").permitAll()
-                        .requestMatchers("login/**").permitAll()
+                        .requestMatchers("/","/images/**").permitAll()
+                        .requestMatchers("/microservice/1.0.0./carrepository/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(withDefaults())
-                .formLogin(withDefaults())
                 .logout(logout -> logout
                         .addLogoutHandler(logoutHandler()));
         return http.build();
